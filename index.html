@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giphy</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+
+</head>
+
+<body id="entra" class="bg-dark" onload="">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white;">
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: white;" href="#">Menu</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" style="color: white;" aria-current="page" href="#"> <i
+                                data-feather="search"></i>&nbsp;
+                            Buscar Giphy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: white;" href="#"><i data-feather="gift"
+                                style="margin-right: 6px;"></i>&nbsp;Random
+                            Giphy</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Buscar Giphy" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col">
+                <div class="form-row form-group">
+                    <label for="search" style="color: white;">Buscar GIF</label>
+                    <input type="text" id="search" class="form-control" placeholder="...">
+                    <!--onkeyup="search($event);"-->
+                </div>
+            </div>
+            <div class="col">
+
+            </div>
+        </div>
+    </div>
+
+    <section class="shadow p-3 mb-5 rounded bg-dark">
+        <table class="table bg-dark">
+            <tbody>
+                <tr>
+                    <td colspan="2" id="contenido">
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="shadow p-3 mb-5 rounded  bg-secondary">
+        <table class="table bg-dark">
+            <tbody>
+                <tr>
+                    <td colspan="2" id="muestra">
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+    <script src="./bootstrap.bundle.min.js"></script>
+    <script>
+        feather.replace();
+
+        const API_KEY = 'kN7C2iKuao0dqfif6weZiGbqomOPfiSe';
+        const inputSearch = document.getElementById("search");
+        inputSearch.onkeyup = async (event) => {
+            console.log(event);//muestra lo que se hizo
+            //event.preventDefault();
+            if (event.keyCode !== 13) return;
+            const response = await fetch(`http://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${inputSearch.value}`);
+
+            const data = await response.json();
+            console.log(data);
+            obtenerProductos(data);
+        };
+
+        const obtenerProductos = (data) => {
+            const info = document.getElementById("contenido");
+            data.data.forEach((element) => {
+                info.innerHTML = `
+                ${info.innerHTML}
+                        <img style="width: 200px;" src="${element.images.preview_gif.url}" alt="${element.title}" class="card-img" alt="...">
+                `;
+            });
+        };
+
+
+        /*const my_api_key = 'kN7C2iKuao0dqfif6weZiGbqomOPfiSe';
+        const response = fetch(`http://api.giphy.com/v1/gifs/search?api_key=${my_api_key}&tag=&rating=g`);
+        const data = await response.json();
+        console.log(data);
+        obtenerProductos2(data);*/
+
+        const my_api_key = 'kN7C2iKuao0dqfif6weZiGbqomOPfiSe';
+        fetch(`https://api.giphy.com/v1/gifs/random?api_key=${my_api_key}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                obtenerGIF(data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        const obtenerGIF = (data) => {
+            const info = document.getElementById("muestra");
+            
+            
+                info.innerHTML = `
+                        
+                        <img style="width: 200px;" src="${data.data.images.original.url.toString()}" alt="" class="card-img" alt="...">
+
+                    
+                        `;
+            
+        };
+
+        
+        /*
+          inputSearch.onkeyup = async (event) => {
+                    console.log(event);
+                    //event.preventDefault();
+                    if (event.keyCode !== 13) return;
+                    const response = await fetch(`http://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${inputSearch.value}`);
+        
+                    const data = await response.json();
+                    console.log(data);
+                    let content =``;
+                    data.data.map((gif, index) => {
+                        content += `^
+                        <img src="${gif.images.original.url}" class="mb-3 ms-1 thumbnail" alt="${gif.title}">
+                        `;
+                    });
+                    gifs.innerHTML = content;
+                };
+        */
+
+
+    </script>
+</body>
+
+</html>
